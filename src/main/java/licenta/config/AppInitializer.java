@@ -1,4 +1,4 @@
-package net.licenta.spring.config;
+package licenta.config;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
@@ -6,7 +6,7 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 
 	@Override
 	protected Class[] getRootConfigClasses() {
-		return new Class[] { AppConfig.class };
+		return new Class[] { AppConfig.class , WebAppConfig.class};
 	}
 
 	@Override
