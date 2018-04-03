@@ -3,7 +3,7 @@ package licenta.boundary;
 import java.util.List;
 
 import licenta.controller.LoginService;
-import licenta.entity.User;
+import licenta.entity.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class LoginController {
 
-    private final LoginService userService;
+    private LoginService userService;
 
     @Autowired()
     public LoginController(LoginService userService) {
@@ -21,12 +21,12 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public boolean login(@RequestBody User user) {
-                return userService.isUserValid(user);
+    public boolean login(@RequestBody Client client) {
+                return userService.isUserValid(client);
           }
 
     @GetMapping("/list")
-	public List<User> getCustomers() {
+	public List<Client> getCustomers() {
 		return userService.list();
 	}
 
@@ -36,10 +36,10 @@ public class LoginController {
 	}
 
 	@PostMapping(value = "/create")
-	public ResponseEntity<User> createCustomer(@RequestBody User user) {
+	public ResponseEntity<Client> createCustomer(@RequestBody Client client) {
 
-		userService.create(user);
+		userService.create(client);
 
-		return new ResponseEntity<>(user, HttpStatus.OK);
+		return new ResponseEntity<>(client, HttpStatus.OK);
 	}
 }

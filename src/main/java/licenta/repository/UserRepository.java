@@ -1,15 +1,15 @@
 package licenta.repository;
 
-import licenta.entity.User;
+import licenta.entity.Client;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface UserRepository extends CrudRepository<User, Long> {
+public interface UserRepository extends CrudRepository<Client, Long> {
 
-    User findByUsernameAndPassword(String username, String password);
+    Client findByUsernameAndPassword(String username, String password);
 
-    List<User> findAll();
+    List<Client> findAll();
 }

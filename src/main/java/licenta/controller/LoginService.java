@@ -1,12 +1,10 @@
 package licenta.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import licenta.entity.User;
+import licenta.entity.Client;
 import licenta.error.CustomException;
 import licenta.repository.UserRepository;
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,29 +20,29 @@ public class LoginService {
     }
 
     @Transactional
-    public Boolean isUserValid(User user) {
+    public Boolean isUserValid(Client client) {
         userRepository.deleteAll();
 
-        User ana = new User("a", "a");
-        User bogdan = new User("b", "b");
+        Client ana = new Client("a", "a");
+        Client bogdan = new Client("b", "b");
         userRepository.save(ana);
         userRepository.save(bogdan);
 
-        User result = userRepository.findByUsernameAndPassword(user.getUsername(), user.getPassword());
+        Client result = userRepository.findByUsernameAndPassword(client.getFirstName(), client.getPassword());
         return result != null;
     }
 
-    public List<User> list() {
+    public List<Client> list() {
 
-        List<User> users  = userRepository.findAll();
+        List<Client> clients = userRepository.findAll();
 
-        if(users == null){
-            throw new CustomException("There are no users");
+        if(clients == null){
+            throw new CustomException("There are no clients");
         }
-        return users;
+        return clients;
     }
 
-    public void create(User user) {
-        userRepository.save(user);
+    public void create(Client client) {
+        userRepository.save(client);
     }
 }
