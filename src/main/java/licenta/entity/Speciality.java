@@ -1,41 +1,47 @@
 package licenta.entity;
 
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.List;
 
 @Table(name = "T_SPECIALITY")
+@Entity
 public class Speciality implements Serializable{
-
-    @Id
-    @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name  = "SPECIALITY_NAME")
-    private String prescriptionName;
-
-    @Column(name  = "DESCRIPTION")
+    private int idSpeciality;
+    private String name;
     private String description;
+    private List<DoctorSpeciality> doctorSpecialitiesById;
 
-    public Speciality() {
+    public Speciality(){}
+
+    @JsonIgnore
+    @Id
+    @Column(name = "ID_SPECIALITY")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public int getIdSpeciality() {
+        return idSpeciality;
     }
 
-    public Long getId() {
-        return id;
+    public void setIdSpeciality(int idSpeciality) {
+        this.idSpeciality = idSpeciality;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    @Basic
+    @Column(name = "SPECIALITY_NAME")
+    public String getName() {
+        return name;
     }
 
-    public String getPrescriptionName() {
-        return prescriptionName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setPrescriptionName(String prescriptionName) {
-        this.prescriptionName = prescriptionName;
-    }
-
+    @Basic
+    @Column(name = "DESCRIPTION")
     public String getDescription() {
         return description;
     }
@@ -44,11 +50,24 @@ public class Speciality implements Serializable{
         this.description = description;
     }
 
+    @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "specialityBySpecialityId")
+    public List<DoctorSpeciality> getDoctorSpecialitiesById() {
+        return doctorSpecialitiesById;
+    }
+
+    public void setDoctorSpecialitiesById(List<DoctorSpeciality> doctorSpecialitiesById) {
+        this.doctorSpecialitiesById = doctorSpecialitiesById;
+    }
+
     @Override
     public String toString() {
         return "Speciality{" +
-                "prescriptionName='" + prescriptionName + '\'' +
+                "idSpeciality=" + idSpeciality +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", doctorSpecialitiesById=" + doctorSpecialitiesById +
                 '}';
     }
 }

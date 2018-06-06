@@ -1,52 +1,45 @@
 package licenta.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "T_PHARMACY")
 public class Pharmacy implements Serializable {
 
-    @Id
-    @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "PHARMACY_NAME")
+    private Integer IDPharmacy;
     private String pharmacyName;
-
-    @Column(name = "LEAD_PHARMACIST")
     private String leadPharmacist;
-
-    @Column(name = "STREET")
     private String street;
-
-    @Column(name = "CITY")
+    private String streetNumber;
     private String city;
-
-    @Column(name = "STATE")
     private String state;
-
-    @Column(name = "ZIP_CODE")
     private String zipCode;
-
-    @Column(name = "PHONE")
     private String phone;
-
-    @Column(name = "EMAIL")
     private String email;
+    private List<PharmacyStock> pharmacyStocksByIdPharmacy;
 
     public Pharmacy() {
     }
 
-    public Long getId() {
-        return id;
+    @JsonIgnore
+    @Id
+    @Column(name = "ID_PHARMACY")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Integer getIDPharmacy() {
+        return IDPharmacy;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIDPharmacy(Integer IDPharmacy) {
+        this.IDPharmacy = IDPharmacy;
     }
 
+    @Column(name = "PHARMACY_NAME")
     public String getPharmacyName() {
         return pharmacyName;
     }
@@ -55,6 +48,7 @@ public class Pharmacy implements Serializable {
         this.pharmacyName = pharmacyName;
     }
 
+    @Column(name = "LEAD_PHARMACIST")
     public String getLeadPharmacist() {
         return leadPharmacist;
     }
@@ -63,6 +57,7 @@ public class Pharmacy implements Serializable {
         this.leadPharmacist = leadPharmacist;
     }
 
+    @Column(name = "STREET")
     public String getStreet() {
         return street;
     }
@@ -71,6 +66,16 @@ public class Pharmacy implements Serializable {
         this.street = street;
     }
 
+    @Column(name = "STREET_NUMBER")
+    public String getStreetNumber() {
+        return streetNumber;
+    }
+
+    public void setStreetNumber(String streetNumber) {
+        this.streetNumber = streetNumber;
+    }
+
+    @Column(name = "CITY")
     public String getCity() {
         return city;
     }
@@ -79,6 +84,7 @@ public class Pharmacy implements Serializable {
         this.city = city;
     }
 
+    @Column(name = "STATE")
     public String getState() {
         return state;
     }
@@ -87,6 +93,7 @@ public class Pharmacy implements Serializable {
         this.state = state;
     }
 
+    @Column(name = "ZIP_CODE")
     public String getZipCode() {
         return zipCode;
     }
@@ -95,6 +102,7 @@ public class Pharmacy implements Serializable {
         this.zipCode = zipCode;
     }
 
+    @Column(name = "PHONE")
     public String getPhone() {
         return phone;
     }
@@ -103,6 +111,7 @@ public class Pharmacy implements Serializable {
         this.phone = phone;
     }
 
+    @Column(name = "EMAIL")
     public String getEmail() {
         return email;
     }
@@ -111,17 +120,30 @@ public class Pharmacy implements Serializable {
         this.email = email;
     }
 
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "pharmacyByPharmacyId")
+    public List<PharmacyStock> getPharmacyStocksByIdPharmacy() {
+        return pharmacyStocksByIdPharmacy;
+    }
+
+    public void setPharmacyStocksByIdPharmacy(List<PharmacyStock> pharmacyStocksByIdPharmacy) {
+        this.pharmacyStocksByIdPharmacy = pharmacyStocksByIdPharmacy;
+    }
+
     @Override
     public String toString() {
         return "Pharmacy{" +
+                "IDPharmacy=" + IDPharmacy +
                 ", pharmacyName='" + pharmacyName + '\'' +
                 ", leadPharmacist='" + leadPharmacist + '\'' +
                 ", street='" + street + '\'' +
+                ", streetNumber='" + streetNumber + '\'' +
                 ", city='" + city + '\'' +
                 ", state='" + state + '\'' +
                 ", zipCode='" + zipCode + '\'' +
                 ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
+                ", pharmacyStocksByIdPharmacy=" + pharmacyStocksByIdPharmacy +
                 '}';
     }
 }

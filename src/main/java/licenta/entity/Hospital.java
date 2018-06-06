@@ -1,22 +1,30 @@
 package licenta.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "T_HOSPITAL")
-public class Hospital implements Serializable{
+public class Hospital implements Serializable {
 
+    @JsonIgnore
     @Id
-    @Column(name = "ID")
+    @Column(name = "HospitalId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long hospitalId;
 
     @Column(name = "HOSPITAL_NAME")
     private String hospitalName;
 
     @Column(name = "STREET")
     private String street;
+
+    @Column(name = "STREET_NUMBER")
+    private String streetNumber;
 
     @Column(name = "CITY")
     private String city;
@@ -33,15 +41,27 @@ public class Hospital implements Serializable{
     @Column(name = "EMAIL")
     private String email;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "hospital", fetch = FetchType.EAGER)
+    private List<Doctor> doctors = new ArrayList<>();
+
     public Hospital() {
     }
 
-    public Long getId() {
-        return id;
+    public String getStreetNumber() {
+        return streetNumber;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setStreetNumber(String streetNumber) {
+        this.streetNumber = streetNumber;
+    }
+
+    public Long getHospitalId() {
+        return hospitalId;
+    }
+
+    public void setHospitalId(Long hospitalId) {
+        this.hospitalId = hospitalId;
     }
 
     public String getHospitalName() {
@@ -103,8 +123,10 @@ public class Hospital implements Serializable{
     @Override
     public String toString() {
         return "Hospital{" +
+                "hospitalId=" + hospitalId +
                 ", hospitalName='" + hospitalName + '\'' +
                 ", street='" + street + '\'' +
+                ", streetNumber='" + streetNumber + '\'' +
                 ", city='" + city + '\'' +
                 ", state='" + state + '\'' +
                 ", zipCode='" + zipCode + '\'' +

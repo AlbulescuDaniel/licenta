@@ -1,68 +1,52 @@
 package licenta.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.springframework.data.repository.cdi.Eager;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-@Table(name = "DOCTOR")
+@Table(name = "T_DOCTOR")
+@Entity
 public class Doctor implements Serializable {
-
-    @Id
-    @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "PASSWORD")
-    private String password;
-
-    @Column(name = "FIRST_NAME")
+    private int idDoctor;
     private String firstName;
-
-    @Column(name = "LAST_NAME")
     private String lastName;
-
-    @Column(name = "AGE")
-    private Integer age;
-
-    @Column(name = "DEPARTMENT")
-    private Integer department;
-
-    @Column(name = "STREET")
+    private int age;
+    private String department;
     private String street;
-
-    @Column(name = "CITY")
     private String city;
-
-    @Column(name = "STATE")
     private String state;
-
-    @Column(name = "ZIP_CODE")
     private String zipCode;
-
-    @Column(name = "PHONE")
     private String phone;
-
-    @Column(name = "EMAIL")
     private String email;
+    private String password;
+    private List<DoctorSpeciality> doctorSpecialitiesById = new ArrayList<>();
+    private List<Prescription> prescriptionsById = new ArrayList<>();
+    private Hospital hospital;
+    private int hospitalID;
 
     public Doctor() {
     }
 
-    public Long getId() {
-        return id;
+    @JsonIgnore
+    @Id
+    @Column(name = "IDDOCTOR")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public int getIdDoctor() {
+        return idDoctor;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdDoctor(int idDoctor) {
+        this.idDoctor = idDoctor;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
+    @Basic
+    @Column(name = "First_Name")
     public String getFirstName() {
         return firstName;
     }
@@ -71,6 +55,8 @@ public class Doctor implements Serializable {
         this.firstName = firstName;
     }
 
+    @Basic
+    @Column(name = "Last_Name")
     public String getLastName() {
         return lastName;
     }
@@ -79,22 +65,28 @@ public class Doctor implements Serializable {
         this.lastName = lastName;
     }
 
-    public Integer getAge() {
+    @Basic
+    @Column(name = "Age")
+    public int getAge() {
         return age;
     }
 
-    public void setAge(Integer age) {
+    public void setAge(int age) {
         this.age = age;
     }
 
-    public Integer getDepartment() {
+    @Basic
+    @Column(name = "Department")
+    public String getDepartment() {
         return department;
     }
 
-    public void setDepartment(Integer department) {
+    public void setDepartment(String department) {
         this.department = department;
     }
 
+    @Basic
+    @Column(name = "Street")
     public String getStreet() {
         return street;
     }
@@ -103,6 +95,8 @@ public class Doctor implements Serializable {
         this.street = street;
     }
 
+    @Basic
+    @Column(name = "City")
     public String getCity() {
         return city;
     }
@@ -111,6 +105,8 @@ public class Doctor implements Serializable {
         this.city = city;
     }
 
+    @Basic
+    @Column(name = "State")
     public String getState() {
         return state;
     }
@@ -119,6 +115,8 @@ public class Doctor implements Serializable {
         this.state = state;
     }
 
+    @Basic
+    @Column(name = "Zip_Code")
     public String getZipCode() {
         return zipCode;
     }
@@ -127,6 +125,8 @@ public class Doctor implements Serializable {
         this.zipCode = zipCode;
     }
 
+    @Basic
+    @Column(name = "Phone")
     public String getPhone() {
         return phone;
     }
@@ -135,6 +135,8 @@ public class Doctor implements Serializable {
         this.phone = phone;
     }
 
+    @Basic
+    @Column(name = "Email")
     public String getEmail() {
         return email;
     }
@@ -143,19 +145,55 @@ public class Doctor implements Serializable {
         this.email = email;
     }
 
-    @Override
-    public String toString() {
-        return "Doctor{" +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", age=" + age +
-                ", department=" + department +
-                ", street='" + street + '\'' +
-                ", city='" + city + '\'' +
-                ", state='" + state + '\'' +
-                ", zipCode='" + zipCode + '\'' +
-                ", phone='" + phone + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+    @Basic
+    @Column(name = "Password")
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @JsonIgnore
+    @Basic
+    @Column(name = "HospitalId")
+    public int getHospitalID() {
+        return hospitalID;
+    }
+
+    public void setHospitalID(int hospitalID) {
+        this.hospitalID = hospitalID;
+    }
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "doctorByDoctorId")
+    public List<DoctorSpeciality> getDoctorSpecialitiesById() {
+        return doctorSpecialitiesById;
+    }
+
+    public void setDoctorSpecialitiesById(List<DoctorSpeciality> doctorSpecialitiesById) {
+        this.doctorSpecialitiesById = doctorSpecialitiesById;
+    }
+
+    @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "doctorByIdDoctor")
+    public List<Prescription> getPrescriptionsById() {
+        return prescriptionsById;
+    }
+
+    public void setPrescriptionsById(List<Prescription> prescriptionsById) {
+        this.prescriptionsById = prescriptionsById;
+    }
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "HospitalId", insertable = false, updatable = false)
+    public Hospital getHospital() {
+        return hospital;
+    }
+
+    public void setHospital(Hospital hospital) {
+        this.hospital = hospital;
     }
 }

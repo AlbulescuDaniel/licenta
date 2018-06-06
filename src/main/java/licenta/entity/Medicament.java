@@ -1,43 +1,40 @@
 package licenta.entity;
 
-import java.io.Serializable;
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Objects;
 
 @Table(name = "T_MEDICAMENT")
+@Entity
 public class Medicament implements Serializable{
-
-    @Id
-    @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "NAME")
+    private int idMedicament;
     private String name;
+    private String description;
+    private String fabricant;
+    private String activeComponent;
+    private List<PrescriptionMedicament> prescriptionMedicamentsByIdMedicaments;
+    private List<PharmacyStock> pharmacyStocksByIdMedicaments;
 
-    @Column(name = "PRODUCTION_DATE")
-    private Date productionDate;
 
-    @Column(name = "VALIDITY_DATE")
-    private Date valabilityDate;
-
-    @Column(name = "MANUFACTURER_NAME")
-    private String manufacturerName;
-
-    @Column(name = "MANUFACTURER_DESCRIPTION")
-    private String manufacturerDescription;
-
-    public Medicament() {
+    @JsonIgnore
+    @Id
+    @Column(name = "ID_MEDICAMENT")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public int getIdMedicament() {
+        return idMedicament;
     }
 
-    public Long getId() {
-        return id;
+    public void setIdMedicament(int idMedicament) {
+        this.idMedicament = idMedicament;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    @Basic
+    @Column(name = "MEDICAMENT_NAME")
     public String getName() {
         return name;
     }
@@ -46,46 +43,86 @@ public class Medicament implements Serializable{
         this.name = name;
     }
 
-    public Date getProductionDate() {
-        return productionDate;
+    @Basic
+    @Column(name = "DESCRIPTION")
+    public String getDescription() {
+        return description;
     }
 
-    public void setProductionDate(Date productionDate) {
-        this.productionDate = productionDate;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public Date getValabilityDate() {
-        return valabilityDate;
+    @Basic
+    @Column(name = "FABRICANT")
+    public String getFabricant() {
+        return fabricant;
     }
 
-    public void setValabilityDate(Date valabilityDate) {
-        this.valabilityDate = valabilityDate;
+    public void setFabricant(String fabricant) {
+        this.fabricant = fabricant;
     }
 
-    public String getManufacturerName() {
-        return manufacturerName;
+    @Basic
+    @Column(name = "ACTIVE_COMPONENT")
+    public String getActiveComponent() {
+        return activeComponent;
     }
 
-    public void setManufacturerName(String manufacturerName) {
-        this.manufacturerName = manufacturerName;
+    public void setActiveComponent(String activeComponent) {
+        this.activeComponent = activeComponent;
     }
 
-    public String getManufacturerDescription() {
-        return manufacturerDescription;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Medicament that = (Medicament) o;
+        return idMedicament == that.idMedicament &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(fabricant, that.fabricant) &&
+                Objects.equals(activeComponent, that.activeComponent);
     }
 
-    public void setManufacturerDescription(String manufacturerDescription) {
-        this.manufacturerDescription = manufacturerDescription;
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(idMedicament, name, description, fabricant, activeComponent);
+    }
+
+    @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "medicamentByMedicamentId")
+    public List<PrescriptionMedicament> getPrescriptionMedicamentsByIdMedicaments() {
+        return prescriptionMedicamentsByIdMedicaments;
+    }
+
+    public void setPrescriptionMedicamentsByIdMedicaments(List<PrescriptionMedicament> prescriptionMedicamentsByIdMedicaments) {
+        this.prescriptionMedicamentsByIdMedicaments = prescriptionMedicamentsByIdMedicaments;
+    }
+
+    @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "medicamentByIdMedicament")
+    public List<PharmacyStock> getPharmacyStocksByIdMedicaments() {
+        return pharmacyStocksByIdMedicaments;
+    }
+
+    public void setPharmacyStocksByIdMedicaments(List<PharmacyStock> pharmacyStocksByIdMedicaments) {
+        this.pharmacyStocksByIdMedicaments = pharmacyStocksByIdMedicaments;
     }
 
     @Override
     public String toString() {
         return "Medicament{" +
-                "name='" + name + '\'' +
-                ", productionDate=" + productionDate +
-                ", valabilityDate=" + valabilityDate +
-                ", manufacturerName='" + manufacturerName + '\'' +
-                ", manufacturerDescription='" + manufacturerDescription + '\'' +
+                "idMedicament=" + idMedicament +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", fabricant='" + fabricant + '\'' +
+                ", activeComponent='" + activeComponent + '\'' +
+                ", prescriptionMedicamentsByIdMedicaments=" + prescriptionMedicamentsByIdMedicaments +
+                ", pharmacyStocksByIdMedicaments=" + pharmacyStocksByIdMedicaments +
                 '}';
     }
 }
