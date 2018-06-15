@@ -7,7 +7,7 @@
     <groupId>org.licenta</groupId>
     <artifactId>licenta</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>Licenta</name>
     <url>http://maven.apache.org</url>
 
